@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Site</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        #main-image {
+            width: 300px;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 999;
+        }
+        .buttons {
+            position: absolute;
+            bottom: 10%;
+            display: flex;
+            gap: 50px;
+        }
+        .button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            z-index: 999;
+        }
+        .button img {
+            width: 100px;
+            height: auto;
+        }
+        .image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .image-container img {
+            position: absolute;
+        }
+        .fullscreen-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: auto;
+            max-height: 100%;
+            object-fit: cover;
+            z-index: 1000;
+        }
+        .replacement-image {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <img id="main-image" src="котик сос.png" alt="Main Image">
+    <div class="buttons">
+        <button id="yes" class="button"><img src="о да 1.png" alt="Yes"></button>
+        <button id="no" class="button"><img src="нет 1.png" alt="No"></button>
+    </div>
+    <div class="image-container"></div>
+    <script>
+        const noButton = document.getElementById("no");
+        const yesButton = document.getElementById("yes");
+        const mainImage = document.getElementById("main-image");
+        const imageContainer = document.querySelector(".image-container");
+
+        // Массив с данными о фотографиях, включая размеры
+        const backgroundImages = [
+            { src: "глазазакатал 2.png", position: "center bottom", width: "120px", height: "auto" },
+            { src: "лягуха3.png", position: "left of main", width: "300px", height: "auto" },
+            { src: "охйоблиннафиг4.png", position: "right bottom", width: "500px", height: "auto" },
+            { src: "лизавах5.png", position: "right top diagonal", width: "400px", height: "auto" },
+            { src: "лунтиккакилиза6.png", position: "left top diagonal", width: "400px", height: "auto" },
+            { src: "котяраааааааа7.png", position: "left bottom", width: "490px", height: "auto" },
+            { src: "херте8.png", position: "right below center", width: "160px", height: "auto" }
+        ];
+
+        const yesBackgrounds = ["ehfehf1.jpg", "ehfehf2.jpg", "ehfehf3.jpg"];
+        const yesButtons = ["о да 1.png", "ода2.png", "ода3.png", "ода4.png", "ода5.png", "ода6.png", "ода7.png", "ода8.png"];
+        const noButtons = ["нет 1.png", "не2.png", "не3.png", "не4.png", "не5.png", "не6.png", "не7.png"];
+        let noClickCount = 0;
+
+        noButton.addEventListener("click", () => {
+            if (noClickCount < backgroundImages.length) {
+                const img = document.createElement("img");
+                img.src = backgroundImages[noClickCount].src;
+                img.style.width = backgroundImages[noClickCount].width; // Задаем ширину
+                img.style.height = backgroundImages[noClickCount].height; // Задаем высоту
+                img.style.position = "absolute";
+
+                // Позиционирование изображений
+                switch (backgroundImages[noClickCount].position) {
+                    case "center bottom":
+                        img.style.bottom = "10%";
+                        img.style.left = "50%";
+                        img.style.transform = "translateX(-50%)";
+                        break;
+                    case "left of main":
+                        img.style.top = "50%";
+                        img.style.left = "calc(50% - 350px)";
+                        img.style.transform = "translateY(-50%)";
+                        break;
+                    case "right bottom":
+                        img.style.bottom = "1%";
+                        img.style.right = "10%";
+                        break;
+                    case "left top diagonal":
+                        img.style.top = "10%";
+                        img.style.left = "10%";
+                        break;
+                    case "right top diagonal":
+                        img.style.top = "10%";
+                        img.style.right = "10%";
+                        break;
+                    case "left bottom":
+                        img.style.bottom = "1%";
+                        img.style.left = "1%";
+                        break;
+                    case "right below center":
+                        img.style.top = "60%";
+                        img.style.right = "20%";
+                        break;
+                }
+
+                imageContainer.appendChild(img);
+
+                noButton.querySelector("img").src = noButtons[noClickCount];
+                yesButton.querySelector("img").src = yesButtons[noClickCount % yesButtons.length];
+                noClickCount++;
+            }
+            if (noClickCount === backgroundImages.length) {
+                // Скрываем кнопку "Нет"
+                noButton.style.display = "none";
+
+                // Создаем изображение для замены кнопки
+                const replacementImage = document.createElement("img");
+                replacementImage.src = "вместонет8.png"; // Замените на нужное изображение
+                replacementImage.classList.add("replacement-image");
+
+                // Добавляем изображение на место кнопки
+                document.querySelector(".buttons").appendChild(replacementImage);
+            }
+        });
+
+        yesButton.addEventListener("click", () => {
+            const img = document.createElement("img");
+            img.src = yesBackgrounds[Math.floor(Math.random() * yesBackgrounds.length)];
+            img.classList.add("fullscreen-image");
+            document.body.appendChild(img);
+
+            yesButton.style.display = "none";
+            noButton.style.display = "none";
+        });
+    </script>
+</body>
+</html>
